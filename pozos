@@ -1,0 +1,122 @@
+//pozos
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+//muestra el mapa
+void muestra(int mapa[10][10], int i, int j, int eleccion){
+	for(i=0 ; i<10 ; i++){
+		
+		if(i==0) printf("+---+---+---+---+---+---+---+---+---+---+\n");	//decoracion
+		
+		for(j=0 ; j<10 ; j++){
+			if(j==0) printf("|");			//decoracion
+			
+			if(mapa[i][j]==1) printf(" J ");						//muestra al jugador
+			else if((mapa[i][j]==2) && (eleccion==1)) printf(" P ");	//muestra el pozo(facil)
+			else printf("   ");										//espacios vacios
+			
+			printf("|");	//decoracion
+		}
+		
+		printf("\n+---+---+---+---+---+---+---+---+---+---+\n");	//decoracion
+	}
+}
+
+//vacio el mapa
+void vaciar(int mapa[10][10], int i, int j){
+	for (i=0 ; i<10 ; i++){
+		for (j=0 ; j<10 ; j++){
+			mapa[i][j] = 0;
+		}
+	}
+}
+
+//creo numeros random para los pozos
+int random(){
+	return rand() % 10;
+}
+
+
+int main(){
+	
+	int mapa[10][10], i, j, k, eleccion, mov, movi, movj, perdiste;
+	
+	//vacio el mapa
+	vaciar(mapa, i, j);
+	
+	//pone los pozos
+	for(k=0 ; k<3 ; k++){
+		do{
+			i = random();
+			j = random();
+		}while((mapa[i][j]!=0) || ((i==9)&&(j==9)) || ((i==0)&&(j==0)));
+		//se asegura de que los posos no se superpongan ni se pongan en el inicio o el final
+		
+		mapa[i][j] = 2;
+	}
+	
+	//seleccion de dificultad
+	//queria una forma "natural" de probar si los pozos funcionaban e invente(basado en brussa) un
+	//nivel de dificultad para los que quieran ver los pozos XD
+	do{
+		printf("Seleccione la dificultad\n(1)Facil\n(2)Normal\n");
+		scanf("%d", &eleccion);
+		if(eleccion!=1 && eleccion!=2) printf("Ese valor no es 1 o 2\n");	
+	}while(eleccion!=1 && eleccion!=2);
+	
+	//juego
+	mapa[0][0] = 1;
+	movi = movj = 0;
+	do{
+		//muestro el estado del mapa
+		muestra(mapa, i, j, eleccion);
+		
+		//movimiento
+		do{
+			printf("Elija un numero dependiendo de para donde se quiera mover\n(1)arriba\n(2)abajo\n(3)izquierda\n(4)derecha\n");
+			scanf("%d", &mov);
+			
+			if(mov!=1 && mov!=2 && mov!=3 && mov!=4) printf("Le pedi que eligiese 1, 2, 3 o 4, no %d", mov);
+			if(mov==1 && movi==0) printf("Ya se encuentra en el tope, no se puede mover para arriba. Elija otro.\n");
+			if(mov==2 && movi==9) printf("Ya se encuentra en el tope, no se puede mover para abajo. Elija otro.\n");
+			if(mov==3 && movj==0) printf("Ya se encuentra en el tope, no se puede mover para la izquierda. Elija otro.\n");
+			if(mov==4 && movi==9) printf("Ya se encuentra en el tope, no se puede mover para la derecha. Elija otro.\n");
+		}while((mov!=1 && mov!=2 && mov!=3 && mov!=4) || (mov==1 && movi==0) || (mov==2 && movi==9) || (mov==3 && movj==9) || (mov==4 && movi==0));
+		
+		//elimino el jugador de la anterior posiscion
+		mapa[movi][movj]= 0;
+		
+		//asigno nueva posiscion
+		switch(mov){
+			case 1:
+				movi --;
+				break;
+				case 2:
+					movi ++;
+					break;
+					case 3:
+						movj --;
+						break;
+						case 4:
+							movj ++;
+							break;
+							default:
+								printf("HACKER XD\n");
+								return 0;
+								break;
+						
+		}
+		
+		//paro al pirata en la nueva posiscion
+		if(mapa[movi][movj]== 2) perdiste = 1;
+		else mapa[movi][movj]= 1;
+		
+	}while((perdiste != 1) && (movi!=9 && movj!=9));
+	
+	//fin, al fin
+	if(mapa[movi][movj] == 2) printf("Perdiste\n");
+	else printf ("Ganaste\n");
+	
+	return 0;
+}
