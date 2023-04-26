@@ -1,0 +1,114 @@
+#include <stdio.h>
+#include <string.h>
+
+//vaciar matriz
+void vaciar(int luces[5][15], int i, int j){
+	for(i=0 ; i<5 ; i++){
+		for(j=0 ; j<15 ; j++){
+			luces[i][j] = 0;
+		}
+	}
+}
+
+//mostrar las luces prendidas y apagadas ((prendidas = on)(apagadas = off))
+void mostrar_m(int luces[5][15], int i, int j){
+	for(i=0 ; i<15 ; i++){
+		for(j=0 ; j<5 ; j++){
+			
+			if(j==0) printf("|");	//decoracion
+			
+			if(luces[i][j]==1) printf(" on ");
+			else printf(" off");
+			
+			printf("|");		//decoracion
+		}
+		printf("\n");	//decoracion
+	}
+}
+
+
+//contador de prendidos y apagados
+const char* on_off(int i, int j, int luces[5][15], int max){
+	int count = 0;
+	for(i=0 ; i<5 ; i++){
+		count = 0;
+		for(j=0 ; j<15 ; j++){
+			if(luces[i][j]==1) count++;
+		}
+		if(count==0) return ("oscuras");
+		else if(count==max) return ("luminosa");
+		else if(count>=6) return ("muy luminosa");
+		else return ("tenebrosa");
+	}
+}
+
+//funcion main
+int main(){
+	
+	//declaro las varables a usar
+	int luces[5][15], maxcalle[5];
+	int i, j, max, querer, posible;
+	
+	//vaciado de matriz
+	vaciar(luces, i, j);
+	
+	//ciclo de declaracion de maximos
+	do{
+		printf("Ingrese la cantidad maxima de luces por calle: ");
+		scanf("%d", &max);
+	}while((max>16)&&(max<1));
+	
+	for(i=0 ; i<5 ; i++){
+		maxcalle[i]=max;
+	}
+	
+	
+	//ciclo de prendido de luces
+	do{
+		//muestra la luminosidad de las calles
+		for(int aux_i=0 ; aux_i<5 ; aux_i++){
+			printf("%d | %s\n", aux_i+1, on_off(i, j, luces, max));
+		}
+		printf("\n\n");
+		
+		//muestra las luces prendidas o apagadas
+		mostrar_m(luces, i, j);
+		
+		//pregunta si quiere prender una luz
+		do{
+			printf("Desea prender una luz?|(1)si|(2)no|\t");
+			scanf("%d", &querer);
+			
+			if(querer!=1 && querer!=2) printf("Elija 1 o 2, no %d\n", querer);
+		}while(querer!=1 && querer!=2);
+		
+		
+		if(querer==1){
+			
+			
+			
+			//pide la calle en la que se quiere prender la luz
+			do{
+				printf("Ingrese la calle en la que quiere prender la luz(num entero del 1 al 5): ");
+				scanf("%d", &i);
+				if(i>6 && i<1) printf("Dijimos del 1 al 5, no %d\n", i);
+			}while(i>6 && i<1);
+			
+			//pide la lampara especifica
+			do{
+				printf("Ingrese la lampara que quiere prender(num entero del 1 al 15): ");
+				scanf("%d", &j);
+				if(j>16 && j<1) printf("Dijimos del 1 al 15, no %d\n", j);
+			}while(j>16 && j<1);
+			
+			//prende la luz
+			luces[i-1][j-1] = 1;
+		}
+		
+		
+	}while(querer==1);
+	
+	
+	
+	return 0;
+}
