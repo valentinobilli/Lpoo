@@ -1,0 +1,134 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <time.h>
+
+//generacion de numeros random para el tesoro y el pj
+int random(int n){
+	return rand() % ((n-2)-1);
+}
+
+//advierte si el pj cayo al agua
+int perdiste(int movi, int movj, int n){
+	if((movi==0)||(movi==n-1)||(movj==0)||(movj==n-1)) return 1;
+	else return 0;
+}
+
+int main(){
+	
+	int n, i, j, mov, movcount, movi, movj;	//declaracion de variables
+	
+	//semilla para el random
+	srand(time(NULL));
+	
+	//pide las dimenciones del mapa
+	do{
+		printf("Ingrese el valor de lo grande que sera el mapa(n x n)(numero entero mayor a 2): ");
+		scanf("%d", &n);
+		if(n<2) printf("Este juego no funciona si no se ingresa un valor logico\n");
+	}while(n<2);
+	
+	int mapa[n][n];
+	
+	//vacio el mapa
+	for(i=0 ; i<n ; i++){
+		for(j=0 ; j<n ; j++){
+			mapa[i][j] = 0;
+		}
+	}
+	
+	//creacion de pj y tesoro
+	int cr_1, cr_2;
+	
+	for(i=0 ; i<2 ; i++){			//si i==0 busca pirata, si es 1 busca tesoro
+		do{
+			cr_1 = random(n);		//creo posicion i random para pj o tesoro
+			cr_2 = random(n);		//creo posicion j random para pj o tesoro
+			
+			if(i==0){
+				movi = cr_1;		//despues es mas claro pero en esta etapa guarda la posicion del pirata
+				movj = cr_2;		//despues es mas claro pero en esta etapa guarda la posicion del pirata
+			}
+		}while((mapa[cr_1][cr_2]!=0));
+		
+		mapa[cr_1][cr_2] = i+1;
+	}
+	
+	//mostrar el mapa
+	
+	int aux_i;
+	//acabo de crear esta variable por una cuestion meramente decorativa, no tiene ninguna funcion real e
+	//improtante en el codigo
+	
+	
+	
+	//movimiento
+	do{
+		for(i=0 ; i<n ; i++){
+			//decoracion del tablero
+			if(i==0){
+				for(aux_i=0 ; aux_i<n+1 ; aux_i++){
+					if(aux_i != (n)) printf("+--");
+					else printf("+\n");
+				}
+			}
+			for(j=0 ; j<n ; j++){
+				if(j==0)printf("|");	//decoracion
+				
+				if(((j==(n-1))&&(i==(0))) || ((j==0)&&(i==n-1))){		//marca los puentes
+					printf("pu");
+				}else if((j==0) || (j==(n-1)) || (i==0) || (i==(n-1))){	//marca el agua
+					printf("ag");
+				}else if(mapa[i][j]==1){								//marca el jugador
+					printf("pj");	
+				}else{													//espacios bacios
+					printf("  ");
+				}
+				printf("|");	//decoracion
+			}
+			printf("\n");
+			//decoracion para el tablero
+			for(aux_i=0 ; aux_i<n+1 ; aux_i++){
+				if(aux_i != (n)) printf("+--");
+				else printf("+\n");
+			}
+		}		//fin del mapa
+		
+		//usuario decide para donde quiere hacer el movimiento
+		do{
+			printf("Elija la direccion en la cual desea moverse, elija uno entre los siguientes numeros:\n|(1)Norte|(2)Sur|(3)Este|(4)Oeste|\n");
+			scanf("%d", &mov);
+			if(mov!=1 && mov!=2 && mov!=3 && mov!=4) printf("Le pifiaste, las opciones son 1, 2, 3 y 4, no %d", mov);
+		}while(mov!=1 && mov!=2 && mov!=3 && mov!=4);
+		
+		if(mov==1){
+			movi --;
+		}else if(mov==2){
+			movi ++;
+		}else if(mov==3){
+			movj --;
+		}else{
+			movj ++;
+		}
+		
+		//vacio el mapa
+		for(i=0 ; i<n ; i++){
+			for(j=0 ; j<n ; j++){
+				if(mapa[i][j] == 2) continue;
+				else mapa[i][j] = 0;
+			}
+		}
+		
+		mapa[movi][movj] = 1;
+		
+		
+	}while((mapa[movi][movj]!=2)&&(movcount!=50)&&(perdiste(movi, movj, n)!=1));
+	
+	if((mapa[movi][movj]==2)) printf("Gnaste");
+	else{
+		if(perdiste(movi, movj, n)==1) printf("Te caiste al agua");
+		else printf("Ya hiciste todos los pasos");
+	}
+	
+	return 0;
+}
