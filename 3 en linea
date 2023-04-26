@@ -1,0 +1,89 @@
+#include <stdio.h>
+
+//vaciar matriz
+void vaciar(int tablero[3][3], int i, int j){
+	for(i=0 ; i<3 ; i++){
+		for(j=0 ; j<3 ; j++){
+			tablero[i][j] = 0;
+		}
+	}
+}
+
+//mostrar tablero
+void mostrar(int tablero[3][3], int i, int j){
+	for (i=0 ; i<3 ; i++){
+		if (i==0) printf("\n+---+---+---+\n");		//decoracion
+		for (j=0 ; j<3 ; j++){
+			
+			if(j==0) printf("|");		//decoracion
+			
+			if(tablero[i][j]==1) printf(" O ");				//si es una ficha ocupada por el jgador 1 imprime o
+			else if (tablero[i][j]==2) printf(" X ");		//si fue del jugador 2 imprime x
+			else printf("   ");								//si no fue ninguna de las anteriore es un espacio
+			
+			printf("|");		//decoracion
+		}
+		printf("\n+---+---+---+\n");	//decoracion
+	}
+}
+
+
+//victoria o no
+int ganar(int tablero[3][3], int i, int j, int k){
+	if(tablero[0][0] == tablero[1][1] && tablero[1][1]== tablero[2][2] && tablero[2][2]== k) return 1;
+	else if(tablero[0][0]== tablero[1][0] && tablero[1][0]== tablero[2][0] && tablero[2][0]== k) return 1;
+	else if(tablero[0][0]== tablero[0][1] && tablero[0][1]== tablero[0][2] && tablero[0][2]== k) return 1;
+	else if(tablero[1][0]== tablero[1][1] && tablero[1][1]== tablero[1][2] && tablero[1][2]== k) return 1;
+	else if(tablero[0][1]== tablero[1][1] && tablero[1][1]== tablero[2][1] && tablero[2][1]== k) return 1;
+	else if(tablero[2][0]== tablero[2][1] && tablero[2][1]== tablero[2][2] && tablero[2][2]== k) return 1;
+	else if(tablero[0][2]== tablero[1][2] && tablero[1][2]== tablero[2][2] && tablero[2][2]== k) return 1;
+	else if(tablero[0][2]== tablero[1][1] && tablero[1][1]== tablero[2][0] && tablero[2][0]== k) return 1;
+	else return 0;
+}
+
+//funcion main
+int main(){
+	
+	int i, j, tablero[3][3], k=0, t=0;		//declaracion de varables
+	
+	vaciar(tablero, i, j);			//vacio el tablero
+	
+	do{
+		if(k==1) k=2;		//cambia la bandera dependiendo del turno
+		else k=1;			//despues de que el primer jugador temine su turno se cambia al del 2do jugador
+		
+		//ingreso el valor en alguna casilla
+		do{
+			
+			mostrar(tablero, i, j);	//muestra el tablero
+			
+			do{
+				printf("Ingrese la posicion(x) en la que quiere colocar su ficha(num entero entre 1 y 3): ");
+				scanf("%d", &i);
+				
+				if((i<1)||(i>3)) printf("Ingrese un numero entre 1 y 3, por favor\n");
+			}while((i<1)||(i>3));
+			
+			do{
+				printf("Ingrese la posicion(y) en la que quiere colocar su ficha(num entero entre 1 y 3): ");
+				scanf("%d", &j);
+				
+				if((j<1)||(j>3)) printf("Ingrese un numero entre 1 y 3, por favor\n");
+			}while((j<1)||(j>3));
+		
+			if(tablero[i-1][j-1]!=0) printf("Ese espacio ya esta ocupado\n");
+		}while(tablero[i-1][j-1]!=0);
+		
+		tablero[i-1][j-1] = k;	//le asigno el espacio elegido por el jugador el valor del jugador
+		
+		t = t + 1;
+		
+	}while(((ganar(tablero, i, j, k))!=1) && (t!=9));
+	
+	if(ganar(tablero, i, j, k==1))printf("Gano el jugador %d", k);
+	else printf("El juego termino en empate");
+	
+	mostrar(tablero, i, j);	//muestra el tablero
+	
+	return 0;
+}
