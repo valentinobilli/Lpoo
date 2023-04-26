@@ -1,0 +1,24 @@
+#include <stdio.h>
+
+int main(){
+	
+	int num;	//declaro las variables
+	
+	printf("Ingrese un numero entero positivo:\n");	//pido un numero entero
+	scanf("%d", &num);								//guardo el numero en la variable num
+	
+	printf("RESOLUCION\n\n");			//decoracion(se puede quitar en el caso de que se requiera)
+	
+	while(num!=1){						//sigue el ciclo siempre que el valor de numero no sea 1
+	
+		printf("%d\n", num);			//muestra el valor de num
+		
+		if((num%2==0)) num = num/ 2;	//si es par divide el num en 2
+		else num = ((num*3) + 1);		//multiplica el valor en 3 y luego suma 1
+		
+	}
+	
+	printf("%d\n", num);				//muestra el valor de num
+	
+	return 0;
+}
