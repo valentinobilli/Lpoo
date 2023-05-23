@@ -1,0 +1,117 @@
+#include <iostream>
+using namespace std;
+
+struct persona{
+	string nombre;
+	string dir;
+	int tel;
+	int edad;
+};
+
+int confirm(string nwnom){	//compara si el susuario dejo de ingresar datos
+	if(nwnom == "0") return 0;
+	else return 1;
+}
+
+void ingreso(persona _persona[50], int &count){	//ingreso de datos
+	string nwnom, nwdir;
+	int nwtel, nwedad;
+	do{
+		system("cls");
+		
+		cout << "Ingrese el nombre de la persona(ingresar 0 para finalizar la carga): ";
+		cin >> nwnom;
+		
+		if(confirm(nwnom)!=0){
+			cout << "Ingrese la direccion: ";
+			cin >> nwdir;
+			
+			cout << "Ingrese el tel(todo junto y sin el +): ";
+			cin >> nwtel;
+			
+			cout << "Ingrese la edad: ";
+			cin >> nwedad;
+		
+			_persona[count] = {nwnom, nwdir, nwtel, nwedad};
+			count ++;
+		}
+	}while(confirm(nwnom));
+}
+
+void busq(persona _persona[50], int count, int i, int k){
+	if(k){
+		string busqs;
+		cout << "Ingrese el nombre a buscar: ";
+		cin >> busqs;
+		
+		cout << endl << "Las perosnas con ese nombre son: ";
+		for(i=0 ; i<count ; i++){
+			if(busqs == _persona[i].nombre){
+				cout << endl << endl << endl << _persona[i].nombre;
+				cout << endl << _persona[i].edad;
+				cout << endl << _persona[i].tel;
+				cout << endl << _persona[i].dir;
+			}
+		}
+	}else{
+		int busqi;
+		cout << "Ingrese la edad a buscar: ";
+		cin >> busqi;
+		
+		cout << endl << "Todos los que tienen esa edad son: ";
+		for(i=0 ; i<count ; i++){
+			if(busqi == _persona[i].edad){
+				cout << endl << _persona[i].nombre;
+			}
+		}
+	}
+	system("pause");
+}
+
+int mostrar_nombres(persona _persona[50], int count, int i){
+	system("cls");
+	for(i=0 ; i<count ; i++){
+		cout << "PERSONA " << i+1 << " --------------------------------------";
+		cout << endl << endl << "Nombre:   \t" << _persona[i].nombre;
+				cout << endl << "Edad:     \t" << _persona[i].edad;
+				cout << endl << "Telefono: \t" << _persona[i].tel;
+				cout << endl << "Direccion:\t" << _persona[i].dir << endl << endl ;
+	}
+	system("pause");
+}
+
+int main(){
+	persona _persona[50];
+	int count, sel, i, k;
+	ingreso(_persona, count);
+	
+	do{
+		
+		system("cls");
+		cout << "Elija una opcion" << endl << "1) Mostrar los nombres" << endl << "2) Busqueda por edad" << endl << "3) Busqueda por inicial" << endl << "4) Exit" << endl << "Opcion: ";
+		cin >> sel;
+		
+		switch(sel){
+			case 1:
+				mostrar_nombres(_persona, count, i);
+				break;
+				case 2:
+					busq(_persona, count, i, k=1);
+					break;
+					case 3:
+						busq(_persona, count, i, k=0);
+						break;
+						case 4:
+							system("cls");
+							cout << "Gracias por usar el programa";
+							break;
+							default:
+								system("cls");
+								cout << "Valor no valido" << endl << endl;
+								break;
+		}
+		
+	}while(sel!=4);
+	
+	return 0;
+}
