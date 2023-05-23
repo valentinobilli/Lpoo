@@ -1,0 +1,30 @@
+#include <iostream>
+using namespace std;
+
+struct persona{
+	string nombre;
+	string apell;
+	int edad;
+};
+
+int main(){
+	persona _persona;
+	string nom, apl;
+	int ed;
+	
+	cout << "Nombre de la persona: ";
+	cin >> nom;
+	
+	cout << "Apellido de la persona: ";
+	cin >> apl;
+	
+	cout << "Edad de la persona: ";
+	cin >> ed;
+	
+	_persona = {nom, apl, ed};
+	system("cls");
+	
+	cout << _persona.nombre << ", " << _persona.apell << ", " << _persona.edad;
+	
+	return 0;
+}
