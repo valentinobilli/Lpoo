@@ -1,1 +1,121 @@
+#include <iostream>
+using namespace std;
 
+void vaciar_matriz(int terna[30][7], int i, int j){
+	for(i=0 ; i<30 ; i++){
+		for(j=0 ; j<7 ; j++){
+			terna[i][j] = 0;
+		}
+	}
+}
+
+void ingreso_datos_jugadores(int terna[30][7], int i, int j, int k, int count[30][7], int &limite){
+	do{	//ingreso de datos
+		do{
+			if(i<0 || i>30) cout << "Ese valor no es uno valido. ";
+		
+			cout << "Ingrese el numero de jugador(del 1 al 30 y 0 en el caso de querer cerrar): ";
+			cin >> i;
+		
+		}while(i<0 || i>30);	//confirmo que jugador quiere jugar, o si no quiere igresar mas
+		
+		if(i!=0){	//si no quiere ingresar mas datos se saltea todo el resto de los ingresos;
+			do{
+				if(j<1 || j>7) cout << "Ese valor no es uno valido. ";
+				
+				cout << "Ingrese el numero de juego(del 1 al 7): ";
+				cin >> j;
+				
+			}while(j<1 || j>7);	//ingresa el numero del juego
+			
+			do{
+				if(k<1 && k>10) cout << "Ese valor no es valido. ";
+				
+				cout << "Ingrese el puntaje: ";
+				cin >> k;
+				
+			}while(k<1 && k>10);	//puntaje
+			
+			terna[i-1][j-1] = terna[i-1][j-1] + k;
+	
+			count[i-1][j-1] ++;
+			limite ++;
+		}
+	}while(i!=0);
+}
+
+void ingreso_datos_premios(float vprem[7], int j){
+	for(j=0 ; j<7 ; j++){
+		cout << "Ingrese el valor del juego " << j+1;
+		cin >> vprem[j];
+	}
+}
+
+void calculos_puntajes(int terna[30][7], int count[30][7], int i, int j, int limite){
+	for(i=0 ; i<limite ; i++){
+		for(j=0 ; j<7 ; j++){
+			if(count[i][j]!=0){
+				terna[i][j] = terna[i][j] / count[i][j];	//hace un promedio de los valores(en resumen)
+			}
+		}
+	}
+}
+
+void mostrar_puntos(int terna[30][7], int i, int j, int limite){
+	cout << "LOS PUNTAJES DE CADA JUGADOR SON:" << endl << endl << endl;
+	
+	for(j=0 ; j<7 ; j++){
+		cout << "JUEGO " << j+1 << "-------------------------------------" << endl;
+		for(i=0 ; i<limite ; i++){
+			if(terna[i][j] != 0)  cout << "\tJugador " << i+1 << ": " << terna[i][j] << endl;
+		}
+	}
+}
+
+void porcentajes_no_caif(int terna[30][7], int i, int j, int limite){
+	int contador, cont_no_calif = 0;
+	for(i=0 ; i<limite ; i++){
+		contador = 0;
+		for(j=0 ; j<7 ; j++){
+			if(terna[i][j] == 0) contador ++;
+		}
+		if(contador==7) cont_no_calif ++;
+	}
+	cout << "No lograron calificar en ningun juego  un porcentaje de " << (30*(cont_no_calif/100)) << " jugadores" << endl;
+}
+
+void mostrar_monto_final(int terna[30][7], int i, int j, int limite, float vprem[7]){
+	float acum=0;
+	for(i=0 ; i<limite ; i++){
+		acum = 0;
+		for(j=0 ; j<7 ; j++){
+			if(terna[i][j]>=8) acum = acum + vprem[j];
+		}
+		cout << "El jugador " << i+1 << " gano " << acum << " de premio" << endl;
+	}	
+}
+
+int main(){
+	int terna[30][7], i=1, j=1, k=0, count[30][7], limite=0;
+	float vprem[7];
+	//declaro las variables
+	
+	vaciar_matriz( terna, i, j);					//vacia la matriz
+	ingreso_datos_jugadores(terna, i, j, k, count, limite);	//encargada de ingresar los datos de los jugadores
+	ingreso_datos_premios(vprem, j);				//encargada de ingresar los datos de los premios
+	calculos_puntajes(terna, count, i, j, limite);	//calcula los puntajes finales de cada jugador
+	system("cls");
+	
+	mostrar_puntos(terna, i, j, limite);			//muestra todos los puntajes obtenidos por todos los jugadores
+	system("pause");
+	system("cls");
+	
+	porcentajes_no_caif(terna, i, j, limite);		//muestra los no calsificados en ningun juego
+	system("pause");
+	system("cls");
+	
+	mostrar_monto_final(terna, i, j, limite, vprem);//muestra lo que gana cada jugador
+	
+	
+	return 0;
+}
